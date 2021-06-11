@@ -1,4 +1,4 @@
-## BlocAdmin - Micro-service with Spring Boot, Cloud Stream, Kafka, Cassandra and Docker
+## BlocAdmin - Micro-services with Spring Boot, Cloud Stream, Kafka, Cassandra and Docker
 Micro-service and event driven web application, with a modern architecture, that allows the administrator of any building complex to manage the information regarding the buildings, residents, resident requests, budgets and expenses, as well as keeping all the information and documents in one place.
 
 ## Pre-requisites
