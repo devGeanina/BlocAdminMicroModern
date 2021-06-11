@@ -10,7 +10,7 @@ For this application Docker for Windows was used, which also requires Python and
 ## Overview
 The application is split into six micro-services, as follows:
 * discovery - this handles and starts the Eureka server, that registers every micro-service. Eureka server knows all the client applications running on each port and IP address, while keeping this information contained into itself, without the web-service needing the actual information. The service discovery helps the micro-services communicate among each other.
-* config - this provides the configuration on the project while removing any trace of configuration values in the project’s source code.
+* config - this provides the configuration on the project while removing any trace of configuration values in the projectâ€™s source code.
 * budget-service - handling the budgeting for the administration. This was split into a separate micro-service because it has may possibilities to be extended to contain larger features. This service will also be the Kafka Consumer for when a new Expense is registered and the budget needs to substract that expense from its overall availability.
 * operation-service - handling the other operations for the administration such as the Households, Requests and Expenses. These were paired together as they share information and are not overall big operations. The expense-service also behaves as the Kafka Producer, sending messages to the budget-service when a new Expense is registered.
 * user-service - handles the users that the administration needs to keep a track of such as the owners, employees, associates and so on.
@@ -33,3 +33,13 @@ The application has the configuration in place to run both using Docker (see scr
 
 ## Author
 * **Geanina Chiricuta**
+
+## Demo - for a more descriptive demo of the actual application (FE) see also my repository for BlocAdminMicro
+
+https://user-images.githubusercontent.com/35954631/121706844-abdefc00-cade-11eb-8167-37d958447724.mp4
+
+![docker](https://user-images.githubusercontent.com/35954631/121706636-7cc88a80-cade-11eb-88ec-cc04e4b41c11.JPG)
+![eureka](https://user-images.githubusercontent.com/35954631/121706641-7d612100-cade-11eb-944e-e298d9a0b1d0.JPG)
+
+
+
