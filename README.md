@@ -2,10 +2,12 @@
 Micro-service and event driven web application, with a modern architecture, that allows the administrator of any building complex to manage the information regarding the buildings, residents, resident requests, budgets and expenses, as well as keeping all the information and documents in one place.
 
 ## Pre-requisites
+The following need to be installed.
 * Cassandra
-* Kafka and Zookeeper or Docker (depending on how you'd like to run the application, configuration is done for both variants)
+* Kafka and ZooKeeper 
+* Or Docker that will run Cassandra, Kafka and ZooKeeper in itself (depending on how you'd like to run the application, configuration is done for both variants)
 For this application Docker for Windows was used, which also requires Python and Alpine to be installed previously on the machine.
-* Create an account in Okta developer and update the information with your own information into the Config server under web-service.properties and under config-data web-service.properties.
+* Create an account in Okta and update the information with your own information into the Config server under web-service.properties and under config-data web-service.properties.
 
 ## Overview
 The application is split into six micro-services, as follows:
