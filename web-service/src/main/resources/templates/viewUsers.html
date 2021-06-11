@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorate="~{layout/layout}">
+<head>
+<title>BlocAdmin</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section class="my-5">
+			<div class="container" id="divContainer">
+				<div class="row" id="divRow">
+					<div class="col-md-12 table-responsive-lg" id="divCol">
+						<table class="table table-hover table-borderless"
+							style="width: 100%" id="userTbl">
+							<thead class="thead-dark" style="background-color: #607D8B;">
+								<tr>
+									<th>
+										<button type="button" class="btn btn-info rounded-circle"
+											data-toggle="modal" data-target="#newUserModal">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</button>
+										<button type="button" class="btn btn-light rounded-circle"
+											th:onclick="|window.location.href='/users/export'|">
+											<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+										</button>
+									</th>
+									<th class="text-center">Full name</th>
+									<th class="text-center">User type</th>
+									<th class="text-center">Building</th>
+									<th class="text-center">Apartment</th>
+									<th class="text-center"></th>
+									<th class="text-center"></th>
+								</tr>
+							</thead>
+							<tbody id="tblBody">
+								<tr th:each="user : ${users}">
+									<td th:text="${user.uuid}"></td>
+									<td th:text="${user.fullName}" class="text-center">Name</td>
+									<td th:text="${user.userTypeEnum}" class="text-center">Type</td>
+									<td th:text="${user.buildingNr}" class="text-center">Building</td>
+									<td th:text="${user.appartmentNr}" class="text-center">Apartment</td>
+									<td class="text-center">
+										<div id="btnsDiv">
+											<button type="button" class="btn btn-warning rounded-circle"
+												data-toggle="modal" data-target="#editUserModal"
+												id="editUser" th:attrappend="data-target=${user.uuid}">
+												<i class="fa fa-pencil" aria-hidden="true"></i>
+											</button>
+
+											<!-- Modal -->
+											<div class="modal fade" id="editUserModal" tabindex="-1"
+												role="dialog" aria-labelledby="userModalLabel"
+												aria-hidden="true" th:attrappend="id=${user.uuid}">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="userModalTitle">Save
+																User</h5>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body" id="modalBody">
+															<form action="#" th:action="@{/users/save}" method="post"
+																th:object="${user}" sec:authorize="isAuthenticated()">
+																<input id="uuid" path="uuid" name="uuid" type="hidden"
+																	placeholder="uuid" class="form-control input-md"
+																	th:value="${user.uuid}" />
+
+																<div class="form-group row">
+																	<label for="firstName" class="col-sm-2 col-form-label">First
+																		name</label>
+																	<div class="col-sm-10">
+																		<input type="text" class="form-control" id="firstName"
+																			placeholder="First name" th:value="${user.firstName}"
+																			th:name="firstName" th:id="firstName">
+																	</div>
+																</div>
+																<div class="form-group row">
+																	<label for="lastName" class="col-sm-2 col-form-label">Last
+																		name</label>
+																	<div class="col-sm-10">
+																		<input type="text" class="form-control" id="lastName"
+																			placeholder="Last Name" th:value="${user.lastName}"
+																			th:name="lastName" th:id="lastName">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="appNr" class="col-sm-2 col-form-label">Apartment
+																		number</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control" id="appNr"
+																			th:value="${user.appartmentNr}"
+																			th:name="appartmentNr" th:id="appartmentNr">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="buildingNr" class="col-sm-2 col-form-label">Building
+																		number</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="buildingNr" th:value="${user.buildingNr}"
+																			th:name="buildingNr" th:id="buildingNr">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="userType" class="col-sm-2 col-form-label">Type</label>
+																	<div class="col-sm-10">
+																		<select id="userTypeEnum" th:name="userTypeEnum"
+																			th:id="userTypeEnum" th:value="${user.userTypeEnum}" style="border: none; background-color: aliceblue;">
+																			<option
+																				th:each="type : ${T(com.blocadminmicromodern.webservice.utils.UserType).values()}"
+																				th:value="${type}" th:text="${type}"
+																				th:selected="${type == user.userTypeEnum}"></option>
+																		</select>
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="details" class="col-sm-2 col-form-label">Details</label>
+																	<div class="col-sm-10">
+																		<textarea class="form-control" id="details"
+																			th:value="${user.details}" th:name="details"
+																			th:id="details"></textarea>
+																	</div>
+																</div>
+
+																<div class="col-12 col-md-12 btn-row" role="group">
+																	<input type="submit" class="btn btn-warning"
+																		value="Submit" />
+																	<button type="button" class="btn btn-secondary"
+																		data-dismiss="modal">Close</button>
+																</div>
+														</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="text-center">
+										<form action="#"
+											th:action="@{/users/delete/{uuid}(uuid=${user.uuid})}" method="get" sec:authorize="isAuthenticated()">
+											<button type="submit"
+												class="btn btn-secondary rounded-circle"
+												onclick="return confirm('Are you sure you want to delete this item?');">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- New Modal -->
+		<div class="modal fade" id="newUserModal" tabindex="-1" role="dialog"
+			aria-labelledby="userModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="userModalTitle">Save User</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="modalBody">
+						<form action="#" th:action="@{/users/save}" th:object="${user}"
+							method="post" sec:authorize="isAuthenticated()">
+							<div class="form-group row">
+								<label for="firstName" class="col-sm-2 col-form-label">First
+									name</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="firstName"
+										placeholder="First name" th:field="*{firstName}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="lastName" class="col-sm-2 col-form-label">Last
+									name</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="lastName"
+										placeholder="Last Name" th:field="*{lastName}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="appNr" class="col-sm-2 col-form-label">Apartment
+									number</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="appNr"
+										th:field="*{appartmentNr}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="buildingNr" class="col-sm-2 col-form-label">Building
+									number</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="buildingNr"
+										th:field="*{buildingNr}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="userType" class="col-sm-2 col-form-label">Type</label>
+								<div class="col-sm-10">
+									<select th:field="*{userTypeEnum}" id="userSelect" style="border: none; background-color: aliceblue;">
+										<option
+											th:each="type : ${T(com.blocadminmicromodern.webservice.utils.UserType).values()}"
+											th:value="${type}" th:text="${type}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="details" class="col-sm-2 col-form-label">Details</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" id="details"
+										th:field="*{details}"></textarea>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-12 btn-row" role="group">
+								<input type="submit" class="btn btn-warning" value="Submit" />
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Close</button>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

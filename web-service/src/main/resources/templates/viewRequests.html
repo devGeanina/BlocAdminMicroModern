@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorate="~{layout/layout}">
+<head>
+<title>BlocAdmin</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section class="my-5">
+			<div class="container" id="divContainer">
+				<div class="row" id="divRow">
+					<div class="col-md-12 table-responsive-lg" id="divCol">
+						<table class="table table-hover table-borderless"
+							style="width: 100%" id="requestTbl">
+							<thead class="thead-dark" style="background-color: #607D8B;">
+								<tr>
+									<th>
+										<button type="button" class="btn btn-info rounded-circle"
+											data-toggle="modal" data-target="#newRequestModal">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</button>
+										<button type="button" class="btn btn-light rounded-circle"
+											th:onclick="|window.location.href='/requests/export'|">
+											<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+										</button>
+									</th>
+									<th class="text-center">Name</th>
+									<th class="text-center">Request Type</th>
+									<th class="text-center">Resolved</th>
+									<th class="text-center">Due date</th>
+									<th class="text-center">Requested By</th>
+									<th class="text-center"></th>
+									<th class="text-center"></th>
+								</tr>
+							</thead>
+							<tbody id="tblBody">
+								<tr th:each="request : ${requests}">
+									<td th:text="${request.uuid}"></td>
+									<td th:text="${request.name}" class="text-center">Name</td>
+									<td th:text="${request.requestTypeEnum}" class="text-center">Request
+										Type</td>
+									<td th:text="${request.resolved} ? 'Yes' : 'No'"
+										class="text-center" th:style="${request.resolved ? 'text-transform: uppercase; background-color: aliceblue;' : 'text-transform: uppercase; background-color: lightblue'}">Resolved</td>
+									<td th:text="${request.formattedDueDate}" class="text-center">Due
+										date</td>
+									<td th:text="${request.householdAddress}" class="text-center">Requested
+										By</td>
+									<td class="text-center">
+										<div id="btnsDiv">
+											<button type="button" class="btn btn-warning rounded-circle"
+												data-toggle="modal" data-target="#editRequestModal"
+												id="editRequest" th:attrappend="data-target=${request.uuid}">
+												<i class="fa fa-pencil" aria-hidden="true"></i>
+											</button>
+
+											<!-- Modal -->
+											<div class="modal fade" id="editRequestModal" tabindex="-1"
+												role="dialog" aria-labelledby="requestModalLabel"
+												aria-hidden="true" th:attrappend="id=${request.uuid}">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="requestModalTitle">Save
+																request</h5>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body" id="modalBody">
+															<form action="#" th:action="@{/requests/save}"
+																method="post" th:object="${request}" sec:authorize="isAuthenticated()">
+																<input id="uuid" path="uuid" name="uuid" type="hidden"
+																	placeholder="uuid" class="form-control input-md"
+																	th:value="${request.uuid}" />
+
+																<div class="form-group row">
+																	<label for="name" class="col-sm-2 col-form-label">Name</label>
+																	<div class="col-sm-10">
+																		<input type="text" class="form-control" id="name"
+																			placeholder="Name" th:value="${request.name}"
+																			th:name="name" th:id="name">
+																	</div>
+																</div>
+																<div class="form-group row">
+																	<label for="resolved" class="col-sm-2 col-form-label">Resolved</label>
+																	<div class="col-sm-10">
+																		<input type="checkbox" class="form-control"
+																			id="resolved" placeholder="Resolved"
+																			th:value="${request.resolved}" th:name="resolved"
+																			th:id="resolved" th:checked="${request.resolved}">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="dueDate" class="col-sm-2 col-form-label">Due
+																		date</label>
+																	<div class="col-sm-10">
+																		<input type="date" class="form-control" id="dueDate"
+																			th:value="${#dates.format(request.dueDate, 'yyyy-MM-dd')}" th:name="dueDate"
+																			th:id="dueDate">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="reqHouse" class="col-sm-2 col-form-label">Household</label>
+																	<div class="col-sm-10">
+																		<select id="householdId" th:name="householdId"
+																			th:id="householdIds" style="border: none; background-color: aliceblue;"
+																			th:value="${request.householdId}">
+																			<option th:each="house: ${houses}"
+																				th:value="${house.uuid}" th:text="${house.address}"
+																				th:selected="${house.uuid == request.householdId}"></option>
+																		</select>
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="requestType"
+																		class="col-sm-2 col-form-label">Type</label>
+																	<div class="col-sm-10">
+																		<select id="requestTypeEnum" th:name="requestTypeEnum"
+																			th:id="requestTypeEnum" style="border: none; background-color: aliceblue;"
+																			th:value="${request.requestTypeEnum}">
+																			<option
+																				th:each="type : ${T(com.blocadminmicromodern.webservice.utils.HouseholdRequestType).values()}"
+																				th:value="${type}" th:text="${type}"
+																				th:selected="${type == request.requestTypeEnum}"></option>
+																		</select>
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="details" class="col-sm-2 col-form-label">Details</label>
+																	<div class="col-sm-10">
+																		<textarea class="form-control" id="details"
+																			th:value="${request.details}" th:name="details"
+																			th:id="details"></textarea>
+																	</div>
+																</div>
+
+																<div class="col-12 col-md-12 btn-row" role="group">
+																	<input type="submit" class="btn btn-warning"
+																		value="Submit" />
+																	<button type="button" class="btn btn-secondary"
+																		data-dismiss="modal">Close</button>
+																</div>
+														</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="text-center">
+										<form action="#"
+											th:action="@{/requests/delete/{uuid}(uuid=${request.uuid})}"
+											method="get" sec:authorize="isAuthenticated()">
+											<button type="submit"
+												class="btn btn-secondary rounded-circle"
+												onclick="return confirm('Are you sure you want to delete this item?');">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- New Modal -->
+		<div class="modal fade" id="newRequestModal" tabindex="-1"
+			role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="requestModalTitle">Save request</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="modalBody">
+						<form action="#" th:action="@{/requests/save}"
+							th:object="${request}" method="post" sec:authorize="isAuthenticated()">
+							<div class="form-group row">
+								<label for="name" class="col-sm-2 col-form-label">Name</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="name"
+										placeholder="Name" th:field="*{name}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="resolved" class="col-sm-2 col-form-label">Resolved</label>
+								<div class="col-sm-10">
+									<input type="checkbox" class="form-control" id="resolved"
+										placeholder="Resolved" th:field="*{resolved}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dueDate" class="col-sm-2 col-form-label">Due
+									date</label>
+								<div class="col-sm-10">
+									<input type="date" class="form-control" id="dueDate"
+										th:field="*{dueDate}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="requestType" class="col-sm-2 col-form-label">Type</label>
+								<div class="col-sm-10">
+									<select th:field="*{requestTypeEnum}" id="requestSelect" style="border: none; background-color: aliceblue;">
+										<option
+											th:each="type : ${T(com.blocadminmicromodern.webservice.utils.HouseholdRequestType).values()}"
+											th:value="${type}" th:text="${type}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="requestHouse" class="col-sm-2 col-form-label">Household</label>
+								<div class="col-sm-10">
+									<select th:field="*{householdId}" id="requestHouse" style="border: none; background-color: aliceblue;">
+										<option th:each="house: ${houses}" th:value="${house.uuid}"
+											th:text="${house.address}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="details" class="col-sm-2 col-form-label">Details</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" id="details"
+										th:field="*{details}"></textarea>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-12 btn-row" role="group">
+								<input type="submit" class="btn btn-warning" value="Submit" />
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Close</button>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

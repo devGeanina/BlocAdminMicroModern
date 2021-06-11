@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorate="~{layout/layout}">
+<head>
+<title>BlocAdmin</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section class="my-5">
+			<div class="container" id="divContainer">
+				<div class="row" id="divRow">
+					<div class="col-md-12 table-responsive-lg" id="divCol">
+						<table class="table table-hover thead-light table-striped"
+							style="width: 100%" id="userTbl">
+							<thead class="thead-dark" style="background-color: #607D8B;">
+								<tr>
+									<th class="text-center">Owner</th>
+									<th class="text-center">Building no.</th>
+									<th class="text-center">Apartment no.</th>
+									<th class="text-center">Total debt</th>
+								</tr>
+							</thead>
+							<tbody id="tblBody">
+								<tr th:each="house : ${housesDebt}">
+									<td th:text="${house.ownerName}" class="text-center">Owner</td>
+									<td th:text="${house.buildingNr}" class="text-center">Building
+										no.</td>
+									<td th:text="${house.appartmentNr}" class="text-center">Apartment
+										no.</td>
+									<td th:text="${house.totalDebt}" class="text-center"
+										th:style="${house.totalDebt > 100 ? 'text-transform: uppercase; background-color: lightblue;' : 'text-transform: uppercase; background-color: aliceblue'}">Total
+										debt</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

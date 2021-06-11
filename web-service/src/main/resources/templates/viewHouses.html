@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorate="~{layout/layout}">
+<head>
+<title>BlocAdmin</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section class="my-5">
+			<div class="container" id="divContainer">
+				<div class="row" id="divRow">
+					<div class="col-md-12 table-responsive-lg" id="divCol">
+						<table class="table table-hover table-borderless"
+							style="width: 100%" id="houseTbl">
+							<thead class="thead-dark" style="background-color: #607D8B;">
+								<tr>
+									<th>
+										<button type="button" class="btn btn-info rounded-circle"
+											data-toggle="modal" data-target="#newHouseModal">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</button>
+										<button type="button" class="btn btn-light rounded-circle"
+											th:onclick="|window.location.href='/houses/export'|">
+											<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+										</button>
+									</th>
+									<th class="text-center">Owner</th>
+									<th class="text-center">Building no.</th>
+									<th class="text-center">Apartment no.</th>
+									<th class="text-center">Rooms</th>
+									<th class="text-center">Capacity</th>
+									<th class="text-center">No. of occupants</th>
+									<th class="text-center">Total debt</th>
+									<th class="text-center"></th>
+									<th class="text-center"></th>
+								</tr>
+							</thead>
+							<tbody id="tblBody">
+								<tr th:each="house : ${houses}">
+									<td th:text="${house.uuid}"></td>
+									<td th:text="${house.ownerName}" class="text-center">Owner</td>
+									<td th:text="${house.buildingNr}" class="text-center">Building
+										no.</td>
+									<td th:text="${house.appartmentNr}" class="text-center">Apartment
+										no.</td>
+									<td th:text="${house.roomsNr}" class="text-center">Rooms</td>
+									<td th:text="${house.totalCapacity}" class="text-center">Capacity</td>
+									<td th:text="${house.nrCurrentOccupants}" class="text-center">No.
+										of occupants</td>
+									<td th:text="${house.totalDebt}" class="text-center">Total
+										debt</td>
+
+									<td class="text-center">
+										<div id="btnsDiv">
+											<button type="button" class="btn btn-warning rounded-circle"
+												data-toggle="modal" data-target="#editHouseModal"
+												id="editHouse" th:attrappend="data-target=${house.uuid}">
+												<i class="fa fa-pencil" aria-hidden="true"></i>
+											</button>
+
+											<!-- Modal -->
+											<div class="modal fade" id="editHouseModal" tabindex="-1"
+												role="dialog" aria-labelledby="houseModalLabel"
+												aria-hidden="true" th:attrappend="id=${house.uuid}">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="houseModalTitle">Save
+																house</h5>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body" id="modalBody">
+															<form action="#" th:action="@{/houses/save}"
+																method="post" th:object="${household}" sec:authorize="isAuthenticated()">
+																<input id="uuid" path="uuid" name="uuid" type="hidden"
+																	placeholder="uuid" class="form-control input-md"
+																	th:value="${house.uuid}" />
+																	
+																<div class="form-group row">
+																	<label for="ownerName" class="col-sm-2 col-form-label">Owner Name</label>
+																	<div class="col-sm-10">
+																		<input type="text" class="form-control"
+																			id="ownerName" th:value="${house.ownerName}"
+																			th:name="ownerName" th:id="ownerName">
+																	</div>
+																</div>	
+
+																<div class="form-group row">
+																	<label for="buildingNr" class="col-sm-2 col-form-label">Building
+																		no.</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="buildingNr" th:value="${house.buildingNr}"
+																			th:name="buildingNr" th:id="buildingNr">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="appartmentNr"
+																		class="col-sm-2 col-form-label">Apartment no.</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="appartmentNr" th:value="${house.appartmentNr}"
+																			th:name="appartmentNr" th:id="appartmentNr">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="roomsNr" class="col-sm-2 col-form-label">Rooms
+																		no.</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control" id="roomsNr"
+																			th:value="${house.roomsNr}" th:name="roomsNr"
+																			th:id="roomsNr">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="nrCurrentOccupants"
+																		class="col-sm-2 col-form-label">No. of
+																		occupants</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="nrCurrentOccupants"
+																			th:value="${house.nrCurrentOccupants}"
+																			th:name="nrCurrentOccupants"
+																			th:id="nrCurrentOccupants">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="totalCapacity"
+																		class="col-sm-2 col-form-label">Total capacity</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="totalCapacity" th:value="${house.totalCapacity}"
+																			th:name="totalCapacity" th:id="totalCapacity">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="details" class="col-sm-2 col-form-label">Details</label>
+																	<div class="col-sm-10">
+																		<textarea class="form-control" id="details"
+																			th:value="${house.details}" th:name="details"
+																			th:id="details"></textarea>
+																	</div>
+																</div>
+
+																<div class="col-12 col-md-12 btn-row" role="group">
+																	<input type="submit" class="btn btn-warning"
+																		value="Submit" />
+																	<button type="button" class="btn btn-secondary"
+																		data-dismiss="modal">Close</button>
+																</div>
+														</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="text-center">
+										<form action="#"
+											th:action="@{/houses/delete/{uuid}(uuid=${house.uuid})}"
+											method="get" sec:authorize="isAuthenticated()">
+											<button type="submit"
+												class="btn btn-secondary rounded-circle"
+												onclick="return confirm('Are you sure you want to delete this item?');">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- New Modal -->
+		<div class="modal fade" id="newHouseModal" tabindex="-1" role="dialog"
+			aria-labelledby="houseModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="houseModalTitle">Save house</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="modalBody">
+						<form action="#" th:action="@{/houses/save}"
+							th:object="${household}" method="post" sec:authorize="isAuthenticated()">
+							<div class="form-group row">
+								<label for="ownerName" class="col-sm-2 col-form-label">Owner Name</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="ownerName"
+										th:field="*{ownerName}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="buildingNr" class="col-sm-2 col-form-label">Building
+									no.</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="buildingNr"
+										th:field="*{buildingNr}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="appartmentNr" class="col-sm-2 col-form-label">Apartment
+									no.</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="appartmentNr"
+										th:field="*{appartmentNr}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="roomsNr" class="col-sm-2 col-form-label">Rooms
+									no.</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="roomsNr"
+										th:field="*{roomsNr}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="nrCurrentOccupants" class="col-sm-2 col-form-label">No.
+									of occupants</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control"
+										id="nrCurrentOccupants" th:field="*{nrCurrentOccupants}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="totalCapacity" class="col-sm-2 col-form-label">Total
+									capacity</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="totalCapacity"
+										th:field="*{totalCapacity}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="details" class="col-sm-2 col-form-label">Details</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" id="details"
+										th:field="*{details}"></textarea>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-12 btn-row" role="group">
+								<input type="submit" class="btn btn-warning" value="Submit" />
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Close</button>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

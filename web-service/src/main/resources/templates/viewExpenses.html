@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorate="~{layout/layout}">
+<head>
+<title>BlocAdmin</title>
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+	<div layout:fragment="content">
+		<section class="my-5">
+			<div class="container" id="divContainer">
+				<div class="row" id="divRow">
+					<div class="col-md-12 table-responsive-lg" id="divCol">
+						<table class="table table-hover table-borderless"
+							style="width: 100%" id="expenseTbl">
+							<thead class="thead-dark table-head">
+								<tr>
+									<th>
+										<button type="button" class="btn btn-info rounded-circle"
+											data-toggle="modal" data-target="#newExpenseModal">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</button>
+										<button type="button" class="btn btn-light rounded-circle"
+											th:onclick="|window.location.href='/expenses/export'|">
+											<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+										</button>
+									</th>
+									<th class="text-center">Type</th>
+									<th class="text-center">Total Sum</th>
+									<th class="text-center">Left Sum</th>
+									<th class="text-center">Due Date</th>
+									<th class="text-center">Payed</th>
+									<th class="text-center">Households</th>
+									<th class="text-center"></th>
+									<th class="text-center"></th>
+								</tr>
+							</thead>
+							<tbody id="tblBody">
+								<tr th:each="expense : ${expenses}">
+									<td th:style="w-auto" th:text="${expense.uuid}"></td>
+									<td th:text="${expense.expenseTypeEnum}" class="text-center">Type</td>
+									<td th:text="${expense.totalSum}" class="text-center">Total
+										Sum</td>
+									<td th:text="${expense.leftoverSum}" class="text-center">Left
+										Sum</td>
+									<td th:text="${expense.formattedDueDate}" class="text-center">Left
+										Sum</td>
+									<td th:text="${expense.payedInFull} ? 'Yes' : 'No'"
+										class="text-center"
+										th:style="${expense.payedInFull ? 'text-transform: uppercase; background-color: aliceblue;' : 'text-transform: uppercase; background-color: lightblue'}">Payed</td>
+									<td th:text="${expense.expenseAddressesFormatted}"
+										class="text-center">Households</td>
+									<td class="text-center">
+										<div id="btnsDiv">
+											<button type="button" class="btn btn-warning rounded-circle"
+												data-toggle="modal" data-target="#editExpenseModal"
+												id="editExpense" th:attrappend="data-target=${expense.uuid}">
+												<i class="fa fa-pencil" aria-hidden="true"></i>
+											</button>
+
+											<!-- Modal -->
+											<div class="modal fade" id="editExpenseModal" tabindex="-1"
+												role="dialog" aria-labelledby="expenseModalLabel"
+												aria-hidden="true" th:attrappend="id=${expense.uuid}">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="expenseModalTitle">Save
+																expense</h5>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body" id="modalBody">
+															<form action="#" th:action="@{/expenses/save}"
+																method="post" th:object="${expense}" sec:authorize="isAuthenticated()">
+																<input id="uuid" path="uuid" name="uuid" type="hidden"
+																	placeholder="uuid" class="form-control input-md"
+																	th:value="${expense.uuid}" />
+
+																<div class="form-group row">
+																	<label for="totalSum" class="col-sm-2 col-form-label">Total
+																		Sum</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="totalSum" th:value="${expense.totalSum}"
+																			th:name="totalSum" th:id="totalSum">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="leftoverSum"
+																		class="col-sm-2 col-form-label">Left Sum</label>
+																	<div class="col-sm-10">
+																		<input type="number" class="form-control"
+																			id="leftoverSum" th:value="${expense.leftoverSum}"
+																			th:name="leftoverSum" th:id="leftoverSum">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="payed" class="col-sm-2 col-form-label">Payed</label>
+																	<div class="col-sm-10">
+																		<input type="checkbox" class="form-control" id="payed"
+																			th:value="${expense.payedInFull}"
+																			th:checked="${expense.payedInFull}"
+																			th:name="payedInFull" th:id="payedInFull">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="dueDate" class="col-sm-2 col-form-label">Due
+																		date</label>
+																	<div class="col-sm-10">
+																		<input type="date" class="form-control" id="dueDate"
+																			th:value="${#dates.format(expense.dueDate, 'yyyy-MM-dd')}"
+																			th:name="dueDate" th:id="dueDate">
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="expenseType"
+																		class="col-sm-2 col-form-label">Type</label>
+																	<div class="col-sm-10">
+																		<select id="expenseTypeEnum" th:name="expenseTypeEnum"
+																			th:id="expenseTypeEnum"
+																			style="border: none; background-color: aliceblue;"
+																			th:value="${expense.expenseTypeEnum}">
+																			<option
+																				th:each="type : ${T(com.blocadminmicromodern.webservice.utils.ExpenseType).values()}"
+																				th:value="${type}" th:text="${type}"
+																				th:selected="${type == expense.expenseTypeEnum}"></option>
+																		</select>
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="expenseHouse"
+																		class="col-sm-2 col-form-label">Household</label>
+																	<div class="col-sm-10">
+																		<select multiple="multiple" id="householdIds"
+																			th:name="householdIds" th:id="householdIds"
+																			th:value="${expense.householdIds}"
+																			style="border: none; background-color: aliceblue;">
+																			<option th:each="house: ${houses}"
+																				th:value="${house.uuid}" th:text="${house.address}"
+																				th:selected="${expense.householdIds.contains(house.uuid)}"></option>
+																		</select>
+																	</div>
+																</div>
+
+																<div class="form-group row">
+																	<label for="details" class="col-sm-2 col-form-label">Details</label>
+																	<div class="col-sm-10">
+																		<textarea class="form-control" id="details"
+																			th:value="${expense.details}" th:name="details"
+																			th:id="details"></textarea>
+																	</div>
+																</div>
+
+																<div class="col-12 col-md-12 btn-row" role="group">
+																	<input type="submit" class="btn btn-warning"
+																		value="Submit" />
+																	<button type="button" class="btn btn-secondary"
+																		data-dismiss="modal">Close</button>
+																</div>
+														</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="text-center">
+										<form action="#"
+											th:action="@{/expenses/delete/{uuid}(uuid=${expense.uuid})}"
+											method="get" sec:authorize="isAuthenticated()">
+											<button type="submit"
+												class="btn btn-secondary rounded-circle"
+												onclick="return confirm('Are you sure you want to delete this item?');">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- New Modal -->
+		<div class="modal fade" id="newExpenseModal" tabindex="-1"
+			role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="expenseModalTitle">Save expense</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="modalBody">
+						<form action="#" th:action="@{/expenses/save}"
+							th:object="${expense}" method="post" sec:authorize="isAuthenticated()">
+							<div class="form-group row">
+								<label for="totalSum" class="col-sm-2 col-form-label">Total
+									Sum</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="totalSum"
+										th:field="*{totalSum}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="leftoverSum" class="col-sm-2 col-form-label">Leftover
+									Sum</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" id="leftoverSum"
+										th:field="*{leftoverSum}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="payed" class="col-sm-2 col-form-label">Payed</label>
+								<div class="col-sm-10">
+									<input type="checkbox" class="form-control" id="payed"
+										th:field="*{payedInFull}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="dueDate" class="col-sm-2 col-form-label">Due
+									date</label>
+								<div class="col-sm-10">
+									<input type="date" class="form-control" id="dueDate"
+										th:field="*{dueDate}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="expenseType" class="col-sm-2 col-form-label">Type</label>
+								<div class="col-sm-10">
+									<select th:field="*{expenseTypeEnum}" id="expenseSelect"
+										style="border: none; background-color: aliceblue;">
+										<option
+											th:each="type : ${T(com.blocadminmicromodern.webservice.utils.ExpenseType).values()}"
+											th:value="${type}" th:text="${type}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="expenseHouse" class="col-sm-2 col-form-label">Household</label>
+								<div class="col-sm-10">
+									<select th:field="*{householdIds}" id="expenseHouse"
+										multiple="multiple"
+										style="border: none; background-color: aliceblue;">
+										<option th:each="house: ${houses}" th:value="${house.uuid}"
+											th:text="${house.address}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="details" class="col-sm-2 col-form-label">Details</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" id="details"
+										th:field="*{details}"></textarea>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-12 btn-row" role="group">
+								<input type="submit" class="btn btn-warning" value="Submit" />
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Close</button>
+							</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

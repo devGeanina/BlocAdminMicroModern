@@ -1,0 +1,20 @@
+@charset "ISO-8859-1";
+
+.th-yes-class{
+	background-color: aliceblue;
+	text-transform: uppercase;
+}
+
+.th-no-class{
+	background-color: lightblue;
+	text-transform: uppercase;
+}
+
+.table-head{
+	background-color: #607D8B;
+}
+
+.select-format{
+	border: none; 
+	background-color: aliceblue;
+}

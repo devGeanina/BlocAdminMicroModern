@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE"></title>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet" />
+</head>
+<body>
+
+	<!-- Main Navigation -->
+	<nav class="navbar navbar-expand-lg navbar-light"
+		style="background-color: #cce4f7;">
+		<div class="container-fluid">
+			<div
+				class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+				<ul class="navbar-nav me-auto">
+					<li class="nav-item dropdown ml-auto"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Users </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/users">View</a>
+						</div></li>
+
+					<li class="nav-item dropdown ml-auto"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Households </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/houses">View</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#houseSummaryModal"
+								data-target="#houseSummaryModal" data-toggle="modal">Summary</a>
+						</div></li>
+
+					<li class="nav-item dropdown ml-auto"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Budgets </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/budgets">View</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#budgetSummaryModal"
+								data-target="#budgetSummaryModal" data-toggle="modal">Summary</a>
+						</div></li>
+
+					<li class="nav-item dropdown ml-auto"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Expenses </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/expenses">View</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#expenseSummaryModal"
+								data-target="#expenseSummaryModal" data-toggle="modal">Summary</a>
+						</div></li>
+
+					<li class="nav-item dropdown ml-auto"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Requests </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/requests">View</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#requestSummaryModal"
+								data-target="#requestSummaryModal" data-toggle="modal">Summary</a>
+						</div></li>
+
+				</ul>
+			</div>
+			<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<button type="button" class="btn btn-secondary"
+							th:onclick="|window.location.href='/home'|">Home</button>
+					</li>
+					</li>
+					<li class="nav-item" style="margin-left: 0.1rem;">
+						<form method="post" th:action="@{/logout}"
+							sec:authorize="isAuthenticated()">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<button type="button" class="btn btn-secondary"
+								th:onclick="|window.location.href='/logout'|">Logout</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div th:insert="summaries/budgetSummary :: budgetSummaryModal" />
+	<div th:insert="summaries/expenseSummary :: expenseSummaryModal" />
+	<div th:insert="summaries/householdSummary :: houseSummaryModal" />
+	<div th:insert="summaries/requestSummary :: requestSummaryModal" />
+
+	<!-- Content Section -->
+	<section layout:fragment="content"></section>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+</body>
+</html>

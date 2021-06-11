@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+ <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Login</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous" />
+</head>
+<body>
+	<div class="container-fluid text-center">
+		<div>
+			<img class="img-fluid" th:src="@{/images/blocadmin.png}" />
+		</div>
+		<form method="get" th:action="@{/oauth2/authorization/okta}" th:if="${#authorization.expression('isAuthenticated()')}">
+
+			<div class="border border-secondary p-3 rounded">
+				<p>Sign in to BlocAdmin</p>
+				<p>
+					<input type="text" th:field="${username}" class="form-control"
+						placeholder="Username" required autofocus />
+				</p>
+				<p>
+					<input type="password" th:field="${password}" class="form-control"
+						placeholder="Password" required />
+				</p>
+				<p>
+					<input type="submit" value="Login" class="btn btn-secondary" />
+				</p>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
