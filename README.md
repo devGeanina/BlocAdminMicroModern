@@ -36,7 +36,8 @@ The application has the configuration in place to run both using Docker (see scr
 ## Author
 * **Geanina Chiricuta**
 
-## Demo - for a more descriptive demo of the actual application (FE) see also my repository for BlocAdminMicro
+## Demo 
+For a more descriptive demo of the actual application (FE) see also my repository for BlocAdminMicro.
 
 https://user-images.githubusercontent.com/35954631/121706844-abdefc00-cade-11eb-8167-37d958447724.mp4
 
