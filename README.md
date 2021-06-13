@@ -18,7 +18,7 @@ The application is split into six micro-services, as follows:
 * user-service - handles the users that the administration needs to keep a track of such as the owners, employees, associates and so on.
 * web-service - provides Okta authentication and Spring Security and the UI implementation of the code, keeping the BE completely separate. Each request allows only users with scope profile to access them (every authenticated user will have it) and all controls also requests for the users authentication to ensure the app's security.
 The application has the configuration in place to run both using Docker (see screenshot of it in a running state), as well as using Cassandra, Zookeper, Python and Kafka installed separately on your local machine.
-This application is also intended to show the migration of a monolith web application (BlocAdmin repository) to a micro-services oriented architecture (BlocAdminMicro) and eventually to a micro-services and event driven architecture using modern technologies (current repository). 
+This application is also intended to show the migration of a monolith web application (BlocAdmin repository: https://github.com/devGeanina/BlocAdmin) to a micro-services oriented architecture (BlocAdminMicro) and eventually to a micro-services and event driven architecture using modern technologies (current repository). 
 
 ## Built With
 * Spring Boot - an open source Java-based framework used to create micro services for web application.
